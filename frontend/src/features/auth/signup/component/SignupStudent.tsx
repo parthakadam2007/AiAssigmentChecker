@@ -37,8 +37,8 @@ const SignupTeacher: FC = () => {
 
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-white-100">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md w-full p-8 bg-white shadow-xl rounded-[2vw]">
+        <div className="flex my-20 justify-center  bg-white-100">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md w-full p-8 bg-white shadow-xl rounded-[2vw] ">
                 <span className="font-semibold  text-gray-00  text-3xl py-3  text-gray-800">For Student</span>
                 <label htmlFor="firstName" className="text-sm font-medium text-gray-700">
                     First Name 

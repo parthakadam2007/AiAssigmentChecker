@@ -38,7 +38,7 @@ const SignupTeacher: FC = () => {
 
 
     return (
-        <div className="flex items-center justify-center min-h-screen ">
+        <div className="flex my-20 justify-center  ">
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md w-full p-8 bg-white shadow-xl rounded-[2vw]">
                 <span className="font-semibold  text-gray-800  text-3xl py-3">For Teacher</span>
                 <label htmlFor="firstName" className="text-sm font-medium text-gray-700">
@@ -88,7 +88,7 @@ const SignupTeacher: FC = () => {
                 >
                     Submit
                 </button>
-                <Link  className="text-blue-600 px-24" to={'/auth/signin'}>Arleady have an account?</Link>
+                <Link  className="text-blue-600 px-24" to={'/auth/signin'}>Already have an account?</Link>
             </form>
         </div>
 
