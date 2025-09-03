@@ -29,7 +29,8 @@ const allowedOrigins = [
   'https://ai-assigment-checker-rho.vercel.app',
   'https://ai-assigment-checker-zrth.vercel.app',
   'https://devaiassigmentchecker-c8bfdgd8h6bmdsad.canadacentral-01.azurewebsites.net',
-  'https://ai-assigment-checker-wy6o-fpkfkq84d-parthakadam2007s-projects.vercel.app'
+  'https://ai-assigment-checker-wy6o-fpkfkq84d-parthakadam2007s-projects.vercel.app',
+   process.env.FRONTEND_URL || 'http://localhost:3000'
 
 ];
 
@@ -48,7 +49,7 @@ app.use(
 )
 
 const {authMiddleware}= require('./middleware/authMiddleware');
-
+const emergencyRoutes = require('./routes/emergency'); // New emergency routes
 const authRoutes = require('./routes/authRoute');
 const teacherRoutes = require('./routes/teacherRoutes');
 const classRoutes = require('./routes/classRoutes');
@@ -57,7 +58,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/teacher', authMiddleware('teacher'), teacherRoutes);
 app.use('/api/class',authMiddleware('teacher'), classRoutes);
 app.use('/api/student',authMiddleware('student'),studentRoutes)
-
+app.use('/api/emergency', authMiddleware('teacher'), emergencyRoutes); // Add this line
 //TESTING
 // app.use('/api/teacher', teacherRoutes);
 // app.use('/api/class', classRoutes);

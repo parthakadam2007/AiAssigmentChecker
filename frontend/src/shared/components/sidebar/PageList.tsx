@@ -40,7 +40,8 @@ const PageList = () => {
         { item_name: 'Home', item_img: HomeImg ,navigate:"/teacher"},
         { item_name: 'Dashboard', item_img: DashboardImg,navigate:"/dashboard"},
         { item_name: 'Analysis', item_img: AnalyticsImg,navigate:"/analysis"},
-        { item_name: 'Chatbox', item_img: RobotImg,navigate:"/aichat"}
+        { item_name: 'Chatbox', item_img: RobotImg,navigate:"/aichat"},
+        { item_name: 'Emergency', item_img: '',navigate:"/emergency"}
     ];
 
     return (

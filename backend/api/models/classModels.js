@@ -514,6 +514,54 @@ getJsonAssignmentCheckInfo = async (student_id, submission_id) => {
   }
 };
 
+const getStudentsByClassId = async (classId) => {
+  try {
+    const query = `
+      SELECT s.student_id, s.first_name, s.last_name, s.email, s.phone
+      FROM students s
+      INNER JOIN class_students cs ON s.student_id = cs.student_id
+      WHERE cs.class_id = $1
+    `;
+    const result = await pool.query(query, [classId]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Get students by teacher ID (all classes)
+const getStudentsByTeacherId = async (teacherId) => {
+  try {
+    const query = `
+      SELECT DISTINCT s.student_id, s.first_name, s.last_name, s.email, s.phone
+      FROM students s
+      INNER JOIN class_students cs ON s.student_id = cs.student_id
+      INNER JOIN classes c ON cs.class_id = c.class_id
+      WHERE c.teacher_id = $1
+    `;
+    const result = await pool.query(query, [teacherId]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Get classes by teacher ID
+const getClassesByTeacherId = async (teacherId) => {
+  try {
+    const query = `
+      SELECT class_id, class_name, section, subject, room
+      FROM classes
+      WHERE teacher_id = $1
+    `;
+    const result = await pool.query(query, [teacherId]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 module.exports = {
   createClass,
@@ -535,7 +583,10 @@ module.exports = {
   getSubmissionAndEvaluation,
   getJsonBuildObjectSubmission,
   getJsonBuildObjectStudentSubmission,
-  getJsonAssignmentCheckInfo
+  getJsonAssignmentCheckInfo,
+  getStudentsByClassId,
+  getStudentsByTeacherId,
+  getClassesByTeacherId
 
 };
 
