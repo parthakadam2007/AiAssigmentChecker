@@ -13,9 +13,15 @@ const SigninPage = () => {
     }
 return (
   <>
-    
+    <div className="relative">
+      {/* Toggle Button - positioned at top right like signup page */}
+      <button
+        onClick={handleRole}
+        className="px-4 py-2 underline text-blue-600 rounded absolute top-6 right-6 hover:text-blue-800 transition-colors z-10"
+      >
+        {role === 'student' ? 'Teacher Login?' : 'Student Login?'}
+      </button>
 
-    <div className=" my-50 space-y-4">
       {role === 'student' ? (
         <LoginForm
           role={'Student'}
@@ -26,18 +32,8 @@ return (
           role={'Teacher'}
           url={`${import.meta.env.VITE_BACKEND_URL}/auth/loginTeacher`}
         />
-      )}    <div className="flex justify-center ">
-      
-      <button
-        onClick={handleRole}
-        className="px-2 py-2  bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-      >
-        {role === 'student' ? 'Teacher Login?' : 'Student Login?'}
-      </button>
+      )}
     </div>
-    </div>
-
-    
   </>
 );
 

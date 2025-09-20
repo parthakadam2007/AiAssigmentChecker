@@ -51,24 +51,6 @@ const SignupTeacher: FC = () => {
     <div className="flex h-screen w-full items-center justify-center bg-gray-50">
       <div className="flex w-[70%] max-w-5xl shadow-2xl rounded-xl overflow-hidden">
         {/* Left Section */}
-        <div className="flex flex-col justify-center items-center w-1/2 bg-gray-100 p-10">
-          <h2 className="text-xl font-semibold mb-4">Welcome Teacher!</h2>
-          <div className="text-6xl font-bold flex items-center gap-3">
-            <img
-              src={TeacherLogin}
-              alt="Teacher"
-              className="w-full h-full"
-            />
-          </div>
-          <p className="mt-6 text-gray-600">
-            Already registered?{" "}
-            <Link to="/auth/signin" className="text-blue-600 font-medium">
-              Log in now
-            </Link>
-          </p>
-        </div>
-
-        {/* Right Section */}
         <div className="w-1/2 bg-white p-10">
           <h2 className="text-2xl font-semibold mb-6">
             Register as a Teacher
@@ -168,6 +150,24 @@ const SignupTeacher: FC = () => {
               Already have an account?
             </Link>
           </form>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex flex-col justify-center items-center w-1/2 bg-gray-100 p-10">
+          <h2 className="text-xl font-semibold mb-4">Welcome Teacher!</h2>
+          <div className="text-6xl font-bold flex items-center gap-3">
+            <img
+              src={TeacherLogin}
+              alt="Teacher"
+              className="w-full h-full"
+            />
+          </div>
+          <p className="mt-6 text-gray-600">
+            Already registered?{" "}
+            <Link to="/auth/signin" className="text-blue-600 font-medium">
+              Log in now
+            </Link>
+          </p>
         </div>
       </div>
     </div>
