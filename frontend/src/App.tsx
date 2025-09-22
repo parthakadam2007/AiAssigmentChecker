@@ -18,6 +18,7 @@ import TeacherProfilePage from "./features/ClassTeacher/profile-teacher/componen
 import StudentProfilePage from "./features/student/profile-student/components/StudentProfile";
 
 import PageAttendance from "./features/ClassTeacher/components/attendance/PageAttendance";
+import DashboardTeacherAnalysis from "./features/ClassTeacher/container/DashboardTeacherAnalysis";
 
 
 // import StudentAnalysis from "./features/student/student-analysis/StudentAnalysis";
@@ -55,6 +56,7 @@ function App() {
         <Route path="/aichat" element={<AIchatbot userType="teacher"/>}></Route>
 
         <Route path="/teacher/attendance/class/:class_id" element={<PageAttendance />} />
+        <Route path="/teacher/analysis" element={<DashboardTeacherAnalysis />} />
 
         {/* --------------STUDENTS ROUTES --------------------*/}
         {/* <Route path="/student" element={<DashboardPageStudent/>}></Route> */}
