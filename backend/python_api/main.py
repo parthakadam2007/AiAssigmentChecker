@@ -48,6 +48,8 @@ origins = [
   'https://ai-assigment-checker-wy6o-fpkfkq84d-parthakadam2007s-projects.vercel.app',
   'http://ec2-65-0-205-222.ap-south-1.compute.amazonaws.com',
   'https://aiclassroom.online'
+
+
 ]
 
 app.add_middleware(
@@ -80,6 +82,9 @@ ALGORITHM = "HS256"
 @app.post("/teacherChatBottest",)
 async def teacherChatBotHelpertest(request: Request,user=Depends(auth_middleware("teacher"))):
     body_as_dict = await request.json()
+    auth_middleware("teacher")
+    body_as_dict["message"] = f" meta info attached by backend [user_id, : {user['teacher_id']}] ,user_query: "+body_as_dict["message"]
+    print("body_as_dict[\"message\"]:", body_as_dict["message"],user["teacher_id"])
 
     response = await TeacherChatBot(str(user["teacher_id"]),body_as_dict["message"])
     

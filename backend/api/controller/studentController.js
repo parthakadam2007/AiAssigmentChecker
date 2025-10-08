@@ -7,7 +7,7 @@ const {
 
         getClassesWithAttendanceByStudentId,
         getAttendanceByStudentAndClass,
-
+        getSubmission_idByStudent_idAndAssignment_id,
         getOverallAttendanceAnalytics,
         getPerformanceAnalytics,
         getRecentTestFeedback,
@@ -62,7 +62,19 @@ handleGetSubmissionsByAssigment_idAndStudent_id = async (req, res) => {
     }
 }
 
-//////Analytics//////
+handleGetGradesBySubmissionByStudent_idAndAssignment_id = async (req, res) => {
+    try {
+        const assignment_id = req.params.assignment_id;
+        const student_id = req.user.student_id;
+        const result = await getGradesBySubmissionByStudent_idAndAssignment_id(student_id, assignment_id);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('Error fetching grades by submission and student ID:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+/// //////Analytics//////
 
 handleGetOverallAttendanceAnalytics = async (req, res) => {
   try {
@@ -141,6 +153,21 @@ handleGetAssignmentDetailed = async (req, res) => {
         res.status(200).json(result);
     } catch (err) {
         console.error('Error fetching detailed assignment:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+handleGetSubmission_idByStudent_idAndAssignment_id = async (req, res) => {
+    try {
+        const assignment_id = req.params.assignment_id;
+        const student_id = req.user.student_id;
+
+        const result = await getSubmission_idByStudent_idAndAssignment_id(student_id, assignment_id);
+        console.log("Fetched submission ID result:", student_id, assignment_id);
+        // result = { ...result, student_id: student_id, assignment_id: assignment_id }; // include IDs in response
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('Error fetching submission ID by student and assignment ID:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -382,6 +409,8 @@ module.exports = {
     handleGetSubmissionsByAssigment_idAndStudent_id,
     handleGetClassesWithAttendanceByStudentId,
     handleGetAttendanceByStudentAndClass,
+    handleGetGradesBySubmissionByStudent_idAndAssignment_id,
+    handleGetSubmission_idByStudent_idAndAssignment_id,
 
     handleGetOverallAttendanceAnalytics,
     handleGetPerformanceAnalytics,

@@ -38,10 +38,10 @@ const AIchatbot = <userType extends 'teacher' | 'student'>({ userType }: { userT
     setInputMessage('');
 
     // fire request (but don't handle response here)
-    await execute(`http://localhost:80/python_api/${userType}ChatBottest`, 'POST',
-      {message: inputMessage} ,
+    // await execute(`http://localhost:80/python_api/${userType}ChatBottest`, 'POST',
+    //   {message: inputMessage} ,
       
-    );
+    // );
 
     await execute(`${import.meta.env.VITE_BACKEND_URL_BASE}/python_api/${userType}ChatBottest`, 'POST', {
       message: inputMessage,
@@ -92,7 +92,7 @@ const AIchatbot = <userType extends 'teacher' | 'student'>({ userType }: { userT
             {/* Loader */}
             {status === 'loading' && (
               <div className="p-4 my-2 rounded-2xl max-w-xs bg-gray-200 text-gray-800 mr-auto">
-                <span className="animate-pulse">Typing...</span>
+                <span className="animate-pulse">Thinking...</span>
               </div>
             )}
           </div>

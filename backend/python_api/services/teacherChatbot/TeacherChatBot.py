@@ -5,7 +5,7 @@ import getpass
 import os
 
 from app.models.database import SessionLocal
-from app.models.teacherModels import create_assignment
+from app.models.teacherModels import create_assignment,get_user_info,get_classes_by_teacher_id
 
 from langchain.chat_models import init_chat_model
 
@@ -67,10 +67,12 @@ def human_assistance(
 
 @tool
 def get_user_info_by_user_id(user_id:str)->str:
-     """get user info by user_id like address and phone number"""
-   
+     """get user info by user_id like name and email"""
+     user_info = get_user_info(user_id)
+     print("user_info:",user_info)
+     return user_info
 
-     return "phone number is 7028874211 address is Newyork"
+
 
 @tool
 def create_assignment_by_class_id(class_id:str,title:str)->None:
@@ -82,11 +84,17 @@ def create_assignment_by_class_id(class_id:str,title:str)->None:
 
     create_assignment(class_id,title)
 
+@tool
+def get_classes_info_by_user_id(user_id:str)->str:
+     """get classes info by user_id like name of class and class_id """
+     class_info = get_classes_by_teacher_id(user_id)
+     print("class_info:",class_info)
+     return class_info
 
 
 
 
-tools = [ human_assistance,get_user_info_by_user_id,create_assignment_by_class_id]
+tools = [get_classes_info_by_user_id, get_user_info_by_user_id,create_assignment_by_class_id]
 llm_with_tools = llm.bind_tools(tools)
 
 def chatbot(
@@ -99,7 +107,7 @@ def chatbot(
         namespace = ("memories", user_id)
         memories = store.search(namespace, query=str(state["messages"][-1].content))
         info = "\n".join([d.value["data"] for d in memories])
-        system_msg = f"You are a helpful assistant talking to the user. User info: {info}"
+        system_msg = f"You are a helpful assistant talking to the user.do not tell user their user id only reply to things which comes affer the meta info User info: {info}"
 
         # Store new memories if the user asks the model to remember
         last_message = state["messages"][-1]

@@ -8,6 +8,7 @@ import PageCreateAssignment from './features/ClassTeacher/container/PageCreateAs
 // import PageSubmission from './features/ClassTeacher/container/PageSubmission';
 import DashboardStudentSubmission from './features/ClassTeacher/container/DashboardStudentSubmission'
 import DashboardAssigmentCheck from './features/ClassTeacher/container/DashboardAssigmentCheck';
+import DashboardAssigmentCheckStudent from "./features/student/containers/DashbordAssigmentCheckStudent";
 
 import PageAssignmentView from "./features/student/containers/PageAssignmentView";
 import DashboardStudentClassPage from './features/student/containers/DashboardStudentClassPage';
@@ -76,9 +77,8 @@ function App() {
           <Route path="/teacherprofile" element={<TeacherProfilePage />}></Route> {/* Teacher Profile */}
           <Route path="/studentprofile" element={<StudentProfilePage />}></Route> {/* Student Profile */}
           <Route path="/studentAnalysis" element={<DashboardStudentAnalysis />}></Route>
-
           {/* <Route path="/studentdashboard" element={<StudentDashboardPage/>}></Route> Student Dashboard */}
-        <Route path="/studentAnalysis" element={<DashboardStudentAnalysis/>}></Route>
+        <Route path="/studentAnalysis" element={<DashboardStudentAnalysis />}></Route>
           {/* <Route path="/performance" element={<Performance/>}></Route> */}
           {/* <Route path="/progress" element={<Progress />}></Route> */}
 
@@ -88,6 +88,7 @@ function App() {
 
           <Route path="/student/attendance" element={<PageAttendanceDashboard />} />
           <Route path="/student/attendance/:class_id" element={<PageAttendanceDetail />} />
+          <Route path="/student/assignment/:assignment_id" element={<DashboardAssigmentCheckStudent />}></Route>
 
 
 

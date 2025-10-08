@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from "../../../../shared/hooks/UseFetch"; // Assuming this path is correct
-
+import { useNavigate } from 'react-router-dom';
 // Placeholder for FileText icon
 const FileTextIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text">
@@ -69,8 +69,10 @@ const ContentAssignment: React.FC = () => {
         year: 'numeric',
       })
     : 'N/A';
+    const navigate = useNavigate();
 
   return (
+
     <div className="p-4 sm:p-6 lg:p-4 font-sans w-150 rounded-tl-4xl">
       <div className="w-3xl mx-auto rounded-[30px] overflow-hidden">
       {/* Right Column: Assignment Details */}
@@ -136,6 +138,14 @@ const ContentAssignment: React.FC = () => {
       )}
         </div>
         {/* --- */}
+        <div>
+          <button
+            className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors mb-4'
+            onClick={() => navigate(`/student/assignment/${assignment_id}`)}
+          >
+            view Grades
+          </button>
+        </div>
 
         {/* Class Comments */}
         <div className="border-t border-gray-200 pt-6">
