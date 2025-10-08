@@ -1,5 +1,5 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI,APIRouter
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
@@ -9,8 +9,10 @@ from services.teacherChatbot.TeacherChatBot import TeacherChatBot
 from services.studentChatbot.studentChatbot import StudentChatBot
 from middleware.auth import auth_middleware
 
+from routes.Attendanceroutes import attendance_router
 
-from app.models.database import SessionLocal
+
+from models.database import SessionLocal
 
 def get_db():
     db = SessionLocal()
@@ -20,6 +22,8 @@ def get_db():
         db.close()
 
 app = FastAPI()
+# attendance routes
+app.include_router(attendance_router)
 
 origins = [
     "http://localhost:3000", 
@@ -43,9 +47,7 @@ origins = [
   'https://devaiassigmentchecker-c8bfdgd8h6bmdsad.canadacentral-01.azurewebsites.net',
   'https://ai-assigment-checker-wy6o-fpkfkq84d-parthakadam2007s-projects.vercel.app',
   'http://ec2-65-0-205-222.ap-south-1.compute.amazonaws.com',
-  'https://aiclassroom.online/'
-
-
+  'https://aiclassroom.online'
 ]
 
 app.add_middleware(

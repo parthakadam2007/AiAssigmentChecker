@@ -63,11 +63,11 @@ function App() {
           <Route path="/teacher/checklist_attendance/class/:class_id" element={<PageAttendance />} />
           <Route path="/teacher/biometric_attendance/class/:class_id" element={<BiometricAttendancePage />}></Route>
           <Route path="/teacherAnalysis" element={<DashboardTeacherAnalysis />}></Route>
-            {/* --------------STUDENTS ROUTES --------------------*/}
+            {/* --------------STUDENTS ROUTES --------------------*/}   
             {/* <Route path="/student" element={<DashboardPageStudent/>}></Route> */}
             {/* <Route path="/student" element={<DashboardPage/>}></Route> */}
 
-            {/* --------------STUDENTS ROUTES --------------------*/}
+            {/* --------------STUDENTS ROUTES --------------------*/} 
 
         <Route path="/student" element={<DashboardPageStudent />}></Route>
           <Route path="/student/class/:class_id" element={<DashboardStudentClassPage />}></Route>

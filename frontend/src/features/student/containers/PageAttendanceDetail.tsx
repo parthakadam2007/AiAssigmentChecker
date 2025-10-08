@@ -1,12 +1,16 @@
 import { useParams } from "react-router-dom";
 // import { Link } from "react-router-dom";
+import { io } from "socket.io-client";
 import useFetch from "../../../shared/hooks/UseFetch";
 import useManualFetch from "../../../shared/hooks/useManualFetch";
 import Header from "../../../shared/components/header/Header";
 import PageList from "../../../shared/components/sidebar/PageList";
 // import WebcamCapture from "../../../features/student/container/WebcamWindow";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
+
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
+
 type AttendanceRecord = {
   date: string;
   status: "Present" | "Absent" | "Late";
@@ -49,10 +53,72 @@ const PageAttendanceDetail: React.FC = () => {
     url: `${import.meta.env.VITE_BACKEND_URL}/student/attendance/detail/${class_id}`,
   });
 
-  const { data: sessionActive } = useFetch<{ active: boolean; session_id?: string }>({
+  // const { data: initialSessionData } = useFetch<{ active: boolean; session_id?: string }>({
+  //   method: "GET",
+  //   url: `${import.meta.env.VITE_BACKEND_URL}/student/biometric_attendance/active_session/${class_id}`,
+  // });
+
+  // const [sessionActive, setSessionActive] = useState<{ active: boolean; session_id?: string }>({
+  //   active: false,
+  // });
+
+  // useEffect(() => {
+  //   // Listen to session updates from backend
+  //   socket.on("sessionStatus", (data: { active: boolean; session_id?: string }) => {
+  //     setSessionActive(data);
+  //   });
+
+  //   // Clean up
+  //   return () => {
+  //     socket.off("sessionStatus");
+  //   };
+  // }, []);
+
+  const [sessionActive, setSessionActive] = useState<{ active: boolean; session_id?: string }>({
+    active: false,
+  });
+
+  const { data: initialSessionData } = useFetch<{ active: boolean; session_id?: string }>({
     method: "GET",
     url: `${import.meta.env.VITE_BACKEND_URL}/student/biometric_attendance/active_session/${class_id}`,
   });
+
+  useEffect(() => {
+    if (initialSessionData) {
+      setSessionActive(initialSessionData);
+    }
+  }, [initialSessionData]);
+
+  // useEffect(() => {
+  //   socket.on("sessionStatus", (data: { active: boolean; session_id?: string }) => {
+  //     console.log("Session active:", sessionActive);
+  //     setSessionActive(data);
+  //   });
+
+  //   return () => {
+  //     socket.off("sessionStatus");
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    socket.on("sessionStatus", (data: { active: boolean; session_id?: string }) => {
+      setSessionActive(data);
+    });
+
+    socket.on("endSession", (data: { classId: string }) => {
+      console.log("Received endSession:", data);
+      if (data.classId === class_id) {
+        setSessionActive({ active: false });
+      }
+    });
+
+    return () => {
+      socket.off("sessionStatus");
+      socket.off("endSession");
+    };
+  }, [class_id]);
+
+
 
   const { execute, status: markStatus, error: markError } = useManualFetch<ApiResponse>();
 

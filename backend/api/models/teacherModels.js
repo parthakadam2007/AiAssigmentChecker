@@ -57,8 +57,9 @@ console.log("Attendance Query Values:", values);
   }
 };
 
-
-// Biometric Attendance session creation
+/////////////////////////////////////////////////
+///// Biometric Attendance session creation//////
+/////////////////////////////////////////////////
 const startAttendanceSession = async (class_id, teacher_id) => {
   try {
     // Deactivate any previous active sessions for this class
@@ -92,6 +93,14 @@ const endAttendanceSession = async (class_id) => {
   const result = await pool.query(query, [class_id]);
   return result.rows[0];
 };
+
+
+// ==========Model for Getting class detail by class Id==========
+async function getClassById(class_id) {
+    const query = `SELECT class_id, class_name FROM classes WHERE class_id = $1`;
+    const result = await pool.query(query, [class_id]);
+    return result.rows[0]; // return the first (and only) matching row
+}
 
 
 //////////////////GET MODELS/////////////////
@@ -430,6 +439,7 @@ getTeacherCommonIssues = async (teacher_id) => {
 module.exports = {
   createTeacher,
   createAttendance,
+  getClassById,
   // biometric
   startAttendanceSession,
   endAttendanceSession,

@@ -31,7 +31,8 @@ CREATE TABLE students (
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
-  url_dp VARCHAR(255) DEFAULT 'public/img/user_photo'
+  url_dp VARCHAR(255) DEFAULT 'public/img/user_photo',
+  face_embedding TEXT NULL  -- New column for face embedding
 );
 
 -- ================================
@@ -162,3 +163,4 @@ FOR EACH ROW
 WHEN (NEW.lecture_number IS NULL)
 EXECUTE FUNCTION set_lecture_number();
 ---
+

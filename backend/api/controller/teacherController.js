@@ -1,13 +1,17 @@
 
 ///////////////////////POST ROUTES////////////////////////////////////////////////
 const { createClass, getClassByTeacher_id } = require('../models/classModels');
-const {createAttendance,startAttendanceSession,endAttendanceSession,
+const {createAttendance,
+    startAttendanceSession,
+    endAttendanceSession,
+    getClassById,
     //ANALYTICS
     getTeacherClassroomOverview,
     getTeacherClassStatistics,
     getTeacherClassFeedbackSummary,
     getClassDetailedFeedback,
     getTeacherCommonIssues,
+
 
  } = require('../models/teacherModels');
 handleCreateClass = async (req, res) => {
@@ -68,25 +72,6 @@ handlestartSession = async (req, res) => {
   }
 };
 
-// end a session for biometric attendence
-// handleEndSession = async (req, res) => {
-//   try {
-//     const { class_id } = req.body;
-
-//     // Call your model function to end the session
-//     const session = await endAttendanceSession(class_id); // implement this in your model
-
-//     // Emit Socket.IO event to notify clients
-//     if (req.io) {
-//       req.io.emit("endSession", { classId: class_id });
-//     }
-
-//     res.status(200).json({ success: true, session });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: "Failed to end session" });
-//   }
-// };
 handleEndSession = async (req, res) => {
   try {
     const { class_id } = req.body;
@@ -152,6 +137,32 @@ handleGetStudentByStudent_id = async (req, res) => {
         res.json({ error: error })
     }
 }
+/////////////////////////////////////////////////////
+////////Controller to get class by class_id//////////
+/////////////////////////////////////////////////////
+handleGetClassById = async (req, res) => {
+    const class_id = req.params.class_id;
+
+    try {
+        if (!class_id) {
+            return res.status(400).json({ error: 'class_id missing' });
+        }
+
+        // Call your DB function that fetches class details
+        const classData = await getClassById(class_id); // You’ll create or use this function
+
+        if (!classData) {
+            return res.status(404).json({ error: 'Class not found' });
+        }
+
+        res.json(classData); // send class info (like name, teacher, etc.)
+    } catch (error) {
+        console.error("Error fetching class by ID:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
 handleGetJsonBuildObjectSubmission = async (req, res) => {
     const class_id = req.params.class_id;
     try {
@@ -302,6 +313,7 @@ module.exports = {
     handleGetTeacherCommonIssues,
 
     handleGetStudentsByClass_id,
+    handleGetClassById, //new
     handleGetJsonBuildObjectSubmission,
     handleGetClassByTeacher_id,
     handleGetJsonBuildObjectStudentSubmission,
