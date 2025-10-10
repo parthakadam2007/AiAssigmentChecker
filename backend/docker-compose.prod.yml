@@ -15,7 +15,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./api:/app  # 👈 Mount your local code inside the container  
+      - ./api:/app # 👈 Mount your local code inside the container  
       - /app/node_modules
   worker-1:
     build: ./api
@@ -23,7 +23,7 @@ services:
       - .env
     depends_on:
       - redis
-    command: ["npm", "run", "workerdev"]
+    command: [ "npm", "run", "workerdev" ]
     volumes:
       - ./api:/app
       - /app/node_modules
@@ -34,7 +34,7 @@ services:
       - .env
     depends_on:
       - redis
-    command: ["npm", "run", "workerdev"]
+    command: [ "npm", "run", "workerdev" ]
     volumes:
       - ./api:/app
       - /app/node_modules
@@ -48,10 +48,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./python_api:/code/app/
-      - /code/app/venv
-    
-     
+      - ./python_api:/code/app
+    working_dir: /code/app
+    environment:
+      - PYTHONPATH=/code/app # this lets "from app.models..." work
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
   nginx:
     image: nginx:latest
     container_name: nginx_prod
@@ -60,10 +62,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-    - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
-    - ./certbot/www:/var/www/certbot
-    - /etc/letsencrypt/live/parthakadam.space/fullchain.pem:/etc/letsencrypt/live/parthakadam.space/fullchain.pem:ro
-    - /etc/letsencrypt/live/parthakadam.space/privkey.pem:/etc/letsencrypt/live/parthakadam.space/privkey.pem:ro
+      - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/www:/var/www/certbot
+      - /etc/letsencrypt/live/parthakadam.space/fullchain.pem:/etc/letsencrypt/live/parthakadam.space/fullchain.pem:ro
+      - /etc/letsencrypt/live/parthakadam.space/privkey.pem:/etc/letsencrypt/live/parthakadam.space/privkey.pem:ro
 
     depends_on:
       - api
@@ -71,15 +73,13 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-
   certbot:
     image: certbot/certbot
     volumes:
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
     entrypoint: >
-      sh -c "trap exit TERM;
-      while :; do
+      sh -c "trap exit TERM; while :; do
         certbot renew --webroot -w /var/www/certbot --quiet --agree-tos &&
         nginx -s reload;
         sleep 12h;

@@ -164,3 +164,13 @@ WHEN (NEW.lecture_number IS NULL)
 EXECUTE FUNCTION set_lecture_number();
 ---
 
+-- Face Data for Biometric Attendance
+CREATE TABLE face_data (
+  face_id SERIAL PRIMARY KEY,
+  student_id INTEGER REFERENCES students(student_id) ON DELETE CASCADE,
+  encoding BYTEA NOT NULL,        -- store the face embedding (128D vector as bytes)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+

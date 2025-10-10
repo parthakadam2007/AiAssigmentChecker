@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from app.models.database import SessionLocal
+from database import SessionLocal
 
 def get_grades_student_id(student_id:str):
     # db = SessionLocal()

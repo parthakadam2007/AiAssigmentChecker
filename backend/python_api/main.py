@@ -9,7 +9,8 @@ from services.teacherChatbot.TeacherChatBot import TeacherChatBot
 from services.studentChatbot.studentChatbot import StudentChatBot
 from middleware.auth import auth_middleware
 
-# from routes.Attendanceroutes import attendance_router
+from routes.AttendanceRoute import attendance_router
+from routes.RegisterFaceRoute import enroll_router
 
 
 from models.database import SessionLocal
@@ -23,7 +24,8 @@ def get_db():
 
 app = FastAPI()
 # attendance routes
-# app.include_router(attendance_router)
+app.include_router(attendance_router)
+app.include_router(enroll_router)
 
 origins = [
     "http://localhost:3000", 

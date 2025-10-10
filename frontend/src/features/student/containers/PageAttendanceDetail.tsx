@@ -131,6 +131,7 @@ const PageAttendanceDetail: React.FC = () => {
     setShowWebcam(true);
     const data = await execute(
       `${import.meta.env.VITE_BACKEND_URL}/student/attendance/mark/${sessionActive.session_id}`,
+      // `http://127.0.0.1:8000/attendance/mark_attendance_attendance_mark_attendance_post`,
       "POST",
       {
         session_id: sessionActive.session_id,
