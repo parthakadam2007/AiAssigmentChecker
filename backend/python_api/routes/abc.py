@@ -1,11 +1,12 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form
 from sqlalchemy.orm import Session
+from datetime import date, datetime
 import numpy as np
 import cv2
-from datetime import date, datetime
+
 from database import SessionLocal
 from app.models.FaceModels import FaceData
-from app.models.AttendanceModel import Attendance 
+from app.models.AttendanceModels import Attendance  # ⬅️ Make sure this model exists
 from app.services.BiometricAttendance.MarkBioAttendance import extract_face_embedding, find_matching_face
 
 attendance_router = APIRouter(
@@ -24,13 +25,12 @@ def get_db():
 
 @attendance_router.post("/mark-attendance")
 async def mark_attendance(
+    file: UploadFile = File(...),
     class_id: int = Form(...),
     session_id: int = Form(...),
-    method: str = Form(...),
-    status: str = Form(...),
-    file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
+    # 1️⃣ Read image
     contents = await file.read()
     npimg = np.frombuffer(contents, np.uint8)
     frame = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
@@ -44,7 +44,7 @@ async def mark_attendance(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Face not detected or embedding failed: {str(e)}")
 
-    # 3️⃣ Check against stored faces
+    # 3️⃣ Match with stored faces
     faces = db.query(FaceData).all()
     matched_face = find_matching_face(input_embedding, faces)
 
@@ -52,6 +52,8 @@ async def mark_attendance(
         return {"success": False, "message": "Face not found in the database"}
 
     student_id = matched_face.student_id
+
+    # 4️⃣ Check if attendance already exists for this student + session
     existing_attendance = (
         db.query(Attendance)
         .filter(
@@ -86,22 +88,3 @@ async def mark_attendance(
         "student_id": student_id,
         "session_id": session_id,
     }
-
-@attendance_router.get("/check-attendance")
-def check_attendance(
-    class_id: int,
-    session_id: int,
-    # student_id: int,
-    db: Session = Depends(get_db)
-):
-    existing_attendance = (
-        db.query(Attendance)
-        .filter(
-            Attendance.class_id == class_id,
-            Attendance.session_id == session_id,
-            # Attendance.student_id == student_id,
-            Attendance.date == date.today()
-        )
-        .first()
-    )
-    return {"marked": bool(existing_attendance)}

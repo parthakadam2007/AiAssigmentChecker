@@ -1,12 +1,12 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends
 from sqlalchemy.orm import Session
 import numpy as np
 import cv2
 
 from database import SessionLocal
-from app.models.Facemodels import FaceData
-from schemas.schemas import FaceDataModel
-from services.enroll_service import encode_face, extract_face_embedding
+from app.models.FaceModels import FaceData
+from app.schemas.Faceschemas import FaceDataModel
+from app.services.BiometricAttendance.RegisterFace import encode_face, extract_face_embedding
 
 enroll_router = APIRouter(
     prefix="/biometric_attendance",
@@ -23,8 +23,9 @@ def get_db():
 
 
 @enroll_router.post("/enroll-face", response_model=FaceDataModel)
-async def enroll_face(student_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def enroll_face(student_id: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db)):
     contents = await file.read()
+    # print(str(user["student_id"]))
     npimg = np.frombuffer(contents, np.uint8)
     frame = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
 

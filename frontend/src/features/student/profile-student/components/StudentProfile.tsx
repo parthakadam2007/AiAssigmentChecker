@@ -2,12 +2,18 @@ import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom";
 import { FaEdit, FaCamera } from "react-icons/fa"
 import FaceRegister from "../../containers/FaceRegister";
+// import useFetch from "../../../../shared/hooks/UseFetch";
+
+
+// interface FaceRegisterProps {
+//     studentId: number;
+// }
 
 export default function StudentProfilePage() {
   const [showFaceRegister, setShowFaceRegister] = useState(false);
   const [isEditing, setIsEditing] = useState(false)
   const [profileData, setProfileData] = useState({
-    id: "student123",
+    id: "103",
     fullName: "John Doe",
     rollNumber: "CS2024001",
     email: "john.doe@university.edu",
@@ -17,7 +23,6 @@ export default function StudentProfilePage() {
     address: "123 University Street, Campus City, State 12345",
     profilePhoto: "https://randomuser.me/api/portraits/men/46.jpg",
     face_embedding: [
-      0.1245, -0.0582, 0.3321, 0.0456, -0.2112, 0.0999, -0.0157, 0.2789,
     ]
   })
 
@@ -50,6 +55,20 @@ export default function StudentProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
+  // const [, setStudentId] = useState<number | null>(null);
+
+  // const { data: studentData } = useFetch<{ student_id: number }>({
+  //   method: "GET",
+  //   url: `${import.meta.env.VITE_BACKEND_URL}/student/student_data/${profileData.id}`,
+  // });
+
+  // useEffect(() => {
+  //   if (studentData?.student_id) {
+  //     setStudentId(studentData.student_id);
+  //   }
+  // }, [studentData]);
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-8 relative w-full rounded-4xl items-end justify-center ">
@@ -257,7 +276,7 @@ export default function StudentProfilePage() {
               )}
 
               {showFaceRegister && (
-                <FaceRegister userId={profileData.id} />
+                <FaceRegister studentId={103} onClose={() => setShowFaceRegister(false)} />
               )}
             </div>
             <div>
@@ -273,4 +292,4 @@ export default function StudentProfilePage() {
       </div>
     </div>
   )
-}
+} 

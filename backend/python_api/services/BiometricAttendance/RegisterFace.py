@@ -2,7 +2,7 @@ import base64
 import numpy as np
 import cv2
 from deepface import DeepFace
-from app.models.Facemodels import FaceData
+from app.models.FaceModels import FaceData
 
 def encode_face(face: FaceData):
     """Convert FaceData object to JSON-friendly dict"""

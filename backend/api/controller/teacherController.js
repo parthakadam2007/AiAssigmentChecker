@@ -1,10 +1,10 @@
 
 ///////////////////////POST ROUTES////////////////////////////////////////////////
 const { createClass, getClassByTeacher_id } = require('../models/classModels');
-const {createAttendance,
+const { createAttendance,
     startAttendanceSession,
     endAttendanceSession,
-    getClassById,
+    getClassById, //new
     //ANALYTICS
     getTeacherClassroomOverview,
     getTeacherClassStatistics,
@@ -13,7 +13,7 @@ const {createAttendance,
     getTeacherCommonIssues,
 
 
- } = require('../models/teacherModels');
+} = require('../models/teacherModels');
 handleCreateClass = async (req, res) => {
     try {
         const classData = req.body;
@@ -28,7 +28,7 @@ handleCreateClass = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-const {uuid}= require('uuidv4');
+const { uuid } = require('uuidv4');
 //Attendance
 handleCreateAttendance = async (req, res) => {
     // req.body = {
@@ -36,18 +36,18 @@ handleCreateAttendance = async (req, res) => {
     //     students_id :[1,2,3,4],
     //     status :['Absent','Present','Present','Present']
     // }
-    try{
+    try {
         const unique_id = uuid();
         const attendanceData = req.body;
-        console.log("------>",attendanceData)
-        for(let i = 0 ; i < attendanceData.students_id.length; i++){
+        console.log("------>", attendanceData)
+        for (let i = 0; i < attendanceData.students_id.length; i++) {
             const student_id = attendanceData.students_id[i];
             const status = attendanceData.status[i];
-            await createAttendance(attendanceData.class_id, student_id, status,unique_id);
+            await createAttendance(attendanceData.class_id, student_id, status, unique_id);
         }
         res.status(201).json({ message: 'Attendance created successfully' });
 
-    }catch(error){
+    } catch (error) {
         console.error('Error creating class:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -55,52 +55,52 @@ handleCreateAttendance = async (req, res) => {
 
 // create a session for biometric attendence
 handlestartSession = async (req, res) => {
-  try {
-    const { class_id, teacher_id } = req.body;
+    try {
+        const { class_id, teacher_id } = req.body;
 
-    const session = await startAttendanceSession(class_id, teacher_id);
+        const session = await startAttendanceSession(class_id, teacher_id);
 
-    // Emit Socket.IO event (if available)
-    if (req.io) {
-      req.io.emit("sessionStarted", { classId: class_id });
+        // Emit Socket.IO event (if available)
+        if (req.io) {
+            req.io.emit("sessionStarted", { classId: class_id });
+        }
+
+        res.status(200).json({ success: true, session });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to start session" });
     }
-
-    res.status(200).json({ success: true, session });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to start session" });
-  }
 };
 
 handleEndSession = async (req, res) => {
-  try {
-    const { class_id } = req.body;
+    try {
+        const { class_id } = req.body;
 
-    const session = await endAttendanceSession(class_id);
+        const session = await endAttendanceSession(class_id);
 
-    if (!session) {
-      return res.status(404).json({ success: false, message: "No active session found" });
+        if (!session) {
+            return res.status(404).json({ success: false, message: "No active session found" });
+        }
+
+        // Emit Socket.IO event to all clients (students)
+        if (req.io) {
+            req.io.emit("endSession", { classId: class_id });
+        }
+
+        res.status(200).json({ success: true, session });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Failed to end session" });
     }
-
-    // Emit Socket.IO event to all clients (students)
-    if (req.io) {
-      req.io.emit("endSession", { classId: class_id });
-    }
-
-    res.status(200).json({ success: true, session });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to end session" });
-  }
 };
 
 
 
 /////////////////////////GET ROUTES/////////////////////////
 
-const { getStudentsByClass_id,getStudentByStudent_id } = require("../models/studentModels")
-const {getJsonBuildObjectSubmission,getJsonBuildObjectStudentSubmission,getJsonAssignmentCheckInfo} = require("../models/classModels")
-const {getAttendanceOfClassByClassId} = require("../models/teacherModels");
+const { getStudentsByClass_id, getStudentByStudent_id } = require("../models/studentModels")
+const { getJsonBuildObjectSubmission, getJsonBuildObjectStudentSubmission, getJsonAssignmentCheckInfo } = require("../models/classModels")
+const { getAttendanceOfClassByClassId } = require("../models/teacherModels");
 const { handleGetActiveSessionByClassId } = require('./studentController');
 handleGetClassByTeacher_id = async (req, res) => {
     const teacher_id = req.user.teacher_id; // Assuming user info is attached to request by auth middleware
@@ -126,7 +126,7 @@ handleGetStudentsByClass_id = async (req, res) => {
 }
 
 handleGetStudentByStudent_id = async (req, res) => {
-        const student_id = req.params.student_id;
+    const student_id = req.params.student_id;
     try {
         if (!student_id) {
             return res.status(401).json({ error: 'student_id missing' });
@@ -163,6 +163,7 @@ handleGetClassById = async (req, res) => {
 }
 
 
+
 handleGetJsonBuildObjectSubmission = async (req, res) => {
     const class_id = req.params.class_id;
     try {
@@ -196,7 +197,7 @@ handleGetJsonAssignmentCheckInfo = async (req, res) => {
         if (!student_id & !submission_id) {
             return res.status(401).json({ error: 'student_id and submission_id are required' });
         }
-        const submissionData = await getJsonAssignmentCheckInfo( student_id,submission_id);
+        const submissionData = await getJsonAssignmentCheckInfo(student_id, submission_id);
         res.json(submissionData);
     } catch (error) {
         res.json({ error: error });
@@ -223,7 +224,7 @@ handleGetAttendanceOfClassByClassId = async (req, res) => {
     // ]
     const class_id = req.params.class_id;
     try {
-        
+
         if (!class_id) {
             return res.status(401).json({ error: 'class_id missing' });
         }
@@ -241,7 +242,7 @@ handleGetTeacherClassroomOverview = async (req, res) => {
     try {
         const teacher_id = req.user.teacher_id;
         const overviewData = await getTeacherClassroomOverview(teacher_id);
-        
+
         res.status(200).json(overviewData);
     } catch (err) {
         console.error('Error fetching teacher classroom overview:', err);
@@ -253,7 +254,7 @@ handleGetTeacherClassStatistics = async (req, res) => {
     try {
         const teacher_id = req.user.teacher_id;
         const classStats = await getTeacherClassStatistics(teacher_id);
-        
+
         res.status(200).json(classStats);
     } catch (err) {
         console.error('Error fetching teacher class statistics:', err);
@@ -266,7 +267,7 @@ handleGetTeacherClassFeedbackSummary = async (req, res) => {
     try {
         const teacher_id = req.user.teacher_id;
         const feedbackSummary = await getTeacherClassFeedbackSummary(teacher_id);
-        
+
         res.status(200).json(feedbackSummary);
     } catch (err) {
         console.error('Error fetching teacher class feedback summary:', err);
@@ -278,7 +279,7 @@ handleGetClassDetailedFeedback = async (req, res) => {
     try {
         const { class_id } = req.params;
         const detailedFeedback = await getClassDetailedFeedback(class_id);
-        
+
         res.status(200).json(detailedFeedback);
     } catch (err) {
         console.error('Error fetching class detailed feedback:', err);
@@ -290,7 +291,7 @@ handleGetTeacherCommonIssues = async (req, res) => {
     try {
         const teacher_id = req.user.teacher_id;
         const commonIssues = await getTeacherCommonIssues(teacher_id);
-        
+
         res.status(200).json(commonIssues);
     } catch (err) {
         console.error('Error fetching teacher common issues:', err);

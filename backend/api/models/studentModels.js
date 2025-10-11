@@ -214,6 +214,18 @@ async function getActiveSessionByClassId(class_id) {
 }
 
 
+// new models to get student by student id
+async function getStudentById(student_id) {
+    const query = `
+        SELECT student_id, first_name, last_name, email
+        FROM students
+        WHERE student_id = $1
+    `;
+    const result = await pool.query(query, [student_id]);
+    return result.rows[0]; // return the first (and only) matching row
+}
+
+
 /////////////////Analytics PageModels////////////
 
 const getOverallAttendanceAnalytics = async (student_id, period = 'current-month') => {
@@ -794,8 +806,6 @@ module.exports = {
   getSubmission_idByStudent_idAndAssignment_id,
 
   //attendance
-
- 
   getClassesWithAttendanceByStudentId,
   getAttendanceByStudentAndClass,
 
@@ -813,7 +823,10 @@ module.exports = {
 
   // Biometric
   markAttendanceForSession,
-  getActiveSessionByClassId
+  getActiveSessionByClassId,
+
+  // new
+  getStudentById //for just biometric attendance
 
 };
 

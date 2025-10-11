@@ -13,7 +13,7 @@ from routes.AttendanceRoute import attendance_router
 from routes.RegisterFaceRoute import enroll_router
 
 
-from models.database import SessionLocal
+from database import SessionLocal
 
 def get_db():
     db = SessionLocal()
@@ -23,9 +23,7 @@ def get_db():
         db.close()
 
 app = FastAPI()
-# attendance routes
-app.include_router(attendance_router)
-app.include_router(enroll_router)
+# # attendance routes
 
 origins = [
     "http://localhost:3000", 
@@ -36,22 +34,20 @@ origins = [
     "http://localhost",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-      'http://localhost',
-  "https://ai-assigment-checker-wy6o.vercel.app",
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:80',
-  'http://localhost:8000',
-  'http://localhost',
-  'http://localhost:443',
-  'https://ai-assigment-checker-rho.vercel.app',
-  'https://ai-assigment-checker-zrth.vercel.app',
-  'https://devaiassigmentchecker-c8bfdgd8h6bmdsad.canadacentral-01.azurewebsites.net',
-  'https://ai-assigment-checker-wy6o-fpkfkq84d-parthakadam2007s-projects.vercel.app',
-  'http://ec2-65-0-205-222.ap-south-1.compute.amazonaws.com',
-  'https://aiclassroom.online'
-
-
+    'http://localhost',
+    "https://ai-assigment-checker-wy6o.vercel.app",
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:80',
+    'http://localhost:8000',
+    'http://localhost',
+    'http://localhost:443',
+    'https://ai-assigment-checker-rho.vercel.app',
+    'https://ai-assigment-checker-zrth.vercel.app',
+    'https://devaiassigmentchecker-c8bfdgd8h6bmdsad.canadacentral-01.azurewebsites.net',
+    'https://ai-assigment-checker-wy6o-fpkfkq84d-parthakadam2007s-projects.vercel.app',
+    'http://ec2-65-0-205-222.ap-south-1.compute.amazonaws.com',
+    'https://aiclassroom.online'
 ]
 
 app.add_middleware(
@@ -80,6 +76,9 @@ from fastapi.security import OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
+
+app.include_router(attendance_router)
+app.include_router(enroll_router)
 
 @app.post("/teacherChatBottest",)
 async def teacherChatBotHelpertest(request: Request,user=Depends(auth_middleware("teacher"))):

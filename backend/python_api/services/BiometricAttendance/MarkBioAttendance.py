@@ -1,6 +1,6 @@
 import numpy as np
 from deepface import DeepFace
-from app.models.Facemodels import FaceData
+from app.models.FaceModels import FaceData
 
 def extract_face_embedding(frame) -> np.ndarray:
     """

@@ -1,57 +1,76 @@
 import React, { useRef, useState, useCallback } from "react";
 import Webcam from "react-webcam";
+// import useFetch from "../../../shared/hooks/UseFetch";
+// import useManualFetch from "../../../shared/hooks/useManualFetch";
+
+interface ApiResponse {
+    success: boolean;
+    message?: string;
+}
 
 interface FaceRegisterProps {
-    userId: number;
+    studentId: number;
     onClose: () => void;
 }
 
-export default function FaceRegister({ userId, onClose }: FaceRegisterProps) {
+interface FaceRegisterProps {
+    studentId: number;  // always passed from parent
+    onClose: () => void;
+}
+
+const FaceRegister: React.FC<FaceRegisterProps> = ({ studentId, onClose }) => {
     const webcamRef = useRef<Webcam>(null);
     const [loading, setLoading] = useState(false);
+    // const { execute } = useManualFetch<ApiResponse>();
 
-    const uploadFaceImage = async (userId: number, base64Image: string) => {
+    const uploadFaceImage = async (base64Image: string) => {
+        if (!studentId) {
+            console.log("Student ID not found!");
+            return;
+        }
+
         try {
             setLoading(true);
 
-            // Convert base64 to Blob
-            const blob = await (await fetch(base64Image)).blob();
+            // Convert base64 to blob
+            const res = await fetch(base64Image);
+            const blob = await res.blob();
 
+            // Create FormData
             const formData = new FormData();
-            formData.append("student_id", userId.toString());
-            formData.append("file", blob, "face.jpg");
+            formData.append("student_id", studentId.toString()); // string value
+            formData.append("file", blob, "face.jpg"); // file field
 
             const response = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL_BASE}/python_api/biometric_attendance/enroll-face`,
                 {
                     method: "POST",
-                    body: formData
+                    body: formData,
                 }
             );
 
             const data = await response.json();
 
-            if (data.status === "success") {
-                alert("Face registered successfully!");
+            if (data.success) {
+                console.log("Face registered successfully!");
+                onClose();
             } else {
-                alert("Failed to register face: " + data.message);
+                console.log("Failed: " + (data.message || "Unknown error"));
             }
         } catch (err) {
-            console.error("Error uploading face:", err);
-            alert("Error uploading face. Check console for details.");
+            console.error(err);
+            console.log("Error uploading face.");
         } finally {
             setLoading(false);
         }
     };
 
+
     const handleCapture = useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot();
         if (!imageSrc) return;
-
-        uploadFaceImage(userId, imageSrc)
-            .then(() => onClose())
-            .catch(() => {});
-    }, [userId, onClose]);
+        uploadFaceImage(imageSrc);
+    }, [uploadFaceImage]);
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -81,4 +100,6 @@ export default function FaceRegister({ userId, onClose }: FaceRegisterProps) {
             </div>
         </div>
     );
-}
+};
+
+export default FaceRegister;

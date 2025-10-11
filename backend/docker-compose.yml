@@ -15,7 +15,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./api:/app # 👈 Mount your local code inside the container  
+      - ./api:/app  # 👈 Mount your local code inside the container  
       - /app/node_modules
   worker-1:
     build: ./api
@@ -23,7 +23,7 @@ services:
       - .env
     depends_on:
       - redis
-    command: [ "npm", "run", "workerdev" ]
+    command: ["npm", "run", "workerdev"]
     volumes:
       - ./api:/app
       - /app/node_modules
@@ -34,7 +34,7 @@ services:
       - .env
     depends_on:
       - redis
-    command: [ "npm", "run", "workerdev" ]
+    command: ["npm", "run", "workerdev"]
     volumes:
       - ./api:/app
       - /app/node_modules
@@ -48,12 +48,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./python_api:/code/app
-    working_dir: /code/app
-    environment:
-      - PYTHONPATH=/code/app # this lets "from app.models..." work
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-
+      - ./python_api:/code/app/
+      - /code/app/venv
+    
+     
   nginx:
     image: nginx:latest
     container_name: nginx_dev
@@ -66,6 +64,6 @@ services:
       - ./nginx/ssl/local.key:/etc/nginx/ssl/server.key:ro
     depends_on:
       - api
-      - python_api
+      - python_api 
     extra_hosts:
       - "host.docker.internal:host-gateway"
