@@ -13,7 +13,7 @@ export default function StudentProfilePage() {
   const [showFaceRegister, setShowFaceRegister] = useState(false);
   const [isEditing, setIsEditing] = useState(false)
   const [profileData, setProfileData] = useState({
-    id: "103",
+    id: "73",
     fullName: "John Doe",
     rollNumber: "CS2024001",
     email: "john.doe@university.edu",
@@ -276,7 +276,7 @@ export default function StudentProfilePage() {
               )}
 
               {showFaceRegister && (
-                <FaceRegister studentId={103} onClose={() => setShowFaceRegister(false)} />
+                <FaceRegister studentId={73} onClose={() => setShowFaceRegister(false)} />
               )}
             </div>
             <div>
