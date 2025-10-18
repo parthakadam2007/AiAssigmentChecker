@@ -63,9 +63,11 @@ function LandingPage() {
             Empower educators and students with engaging, personalized learning experiences. Easily manage classes, share resources, and track progress—all in one platform.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+            <Link to="/contacts">
             <button className="px-7 py-3 bg-blue-600 text-white font-semibold rounded-full shadow hover:bg-blue-700 transition">
               Contact Us
             </button>
+            </Link>
             <Link to="/login">
             <button className="px-7 py-3 bg-white border border-blue-600 text-blue-600 font-semibold rounded-full shadow hover:bg-blue-100 transition">
               Sign In to Classroom
@@ -117,10 +119,6 @@ function LandingPage() {
           <div className="bg-gray-50 rounded-3xl shadow-md flex-1 flex flex-col items-center pb-8 overflow-hidden">
             {/* Framed image */}
             <div className="w-full bg-gradient-to-br from-blue-100 to-blue-200 p-6 pb-0 rounded-t-3xl flex justify-center relative overflow-hidden">
-              {/* "COMING SOON" Badge */}
-              <span className="absolute top-6 right-8 bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold shadow-md z-10">
-                COMING SOON
-              </span>
               <div className="rounded-t-2xl overflow-hidden border border-blue-100 w-[410px] h-[235px] bg-white shadow">
                 <img
                   src={TeacherClass}

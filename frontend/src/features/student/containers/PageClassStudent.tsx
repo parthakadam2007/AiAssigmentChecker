@@ -10,7 +10,7 @@ const PageClassStudent: React.FC<{ class_id: string }> = ({ class_id }) => {
     // const dispatch = useDispatch();
     let currentTab = useSelector((state: any) => state.shared.tabStatus.activeTab);
     return (
-        <div className="w-[1500px]">
+        <div className="w-[1500px] bg-gray-50 rounded-l-3xl overflow-y-scroll">
             <Tab list={[{ item_name: "Section" }, { item_name: "Classwork" }, { item_name: "People" }]} />
 
             {currentTab === "Section" ? (

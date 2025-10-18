@@ -26,11 +26,13 @@
     "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.1",
+    "nodemailer": "^7.0.9",
     "nodemon": "^3.1.10",
     "office-text-extractor": "^3.0.3",
     "pg": "^8.16.3",
     "pg-promise": "^11.15.0",
     "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "uuidv4": "^6.2.13",
     "word-extractor": "^1.0.4"
   }

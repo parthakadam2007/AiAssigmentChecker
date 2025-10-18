@@ -4,7 +4,7 @@ import {Link} from "react-router-dom"
 import userlogo from "../../../../assets/userlogo.svg"
 const navItems = [
   { name: 'Products', dropdown: ['Classroom', 'Docs', 'Slides'] },
-  { name: 'AI', dropdown: ['Gemini AI', 'Assistant', 'Vision'] },
+  { name: 'AI', dropdown: ['AI Chatbot', 'Assistant', 'Vision'] },
   { name: 'Resource', dropdown: ['Guides', 'Tutorials', 'Support'] },
 ];
 const Navbar = () => {
@@ -51,9 +51,11 @@ const Navbar = () => {
             <Link to="/login">
             <button className="px-4 py-2 rounded-full text-blue-600 font-medium hover:bg-blue-50 transition flex items-center gap-2"><img className="font-bold" src={userlogo}></img>Log In</button>
             </Link>
+            <Link to="/contacts">
             <button className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-full shadow hover:bg-blue-700 transition">
               Contact Us
             </button>
+            </Link>
           </nav>
         </div>
       </header>

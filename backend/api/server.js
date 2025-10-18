@@ -10,13 +10,11 @@ const cookieParser = require('cookie-parser');
 const http = require("http");
 const { Server } = require("socket.io");
 
-
-
-
 const app = express();
 const server = http.createServer(app);
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use((req, res, next) => { req.io = io; next(); });
 
 // Redis connection
 const connection = new Redis({
@@ -68,7 +66,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/teacher', authMiddleware('teacher'), teacherRoutes);
 app.use('/api/class', authMiddleware('teacher'), classRoutes);
 app.use('/api/student', authMiddleware('student'), studentRoutes)
-
 //TESTING
 // app.use('/api/teacher', teacherRoutes);
 // app.use('/api/class', classRoutes);
@@ -84,6 +81,8 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+
+app.use((req, res, next) => { req.io = io; next(); });
 
 // importing socket logic
 require("./sockets/BiometricAttend")(io);

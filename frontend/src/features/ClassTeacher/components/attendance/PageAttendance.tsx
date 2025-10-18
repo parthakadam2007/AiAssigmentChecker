@@ -4,6 +4,8 @@ import useFetch from "../../../../shared/hooks/UseFetch";
 import { useParams,useNavigate } from "react-router-dom";
 import useManualFetch from "../../../../shared/hooks/useManualFetch";
 import AnimatedLoader from "../../../../shared/components/loaders/DefaultLoader";
+import Header from "../../../../shared/components/header/Header";
+import PageList from "../../../../shared/components/sidebar/PageList";
 interface Student {
   student_id: number;
   first_name: string;
@@ -98,8 +100,13 @@ const PageAttendance: React.FC = () => {
   const absentCount = students.length - presentCount;
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6">
-      <div className="bg-blue-500 text-white p-5">
+    <div>
+      <Header />
+      <div className="flex h-[89vh]">
+      <PageList />
+     <div className="bg-gray-50 rounded-l-3xl w-full overflow-y-auto p-6">
+    <div className="bg-white rounded-l-4xl ">
+      <div className="bg-blue-500 text-white p-5 rounded-t-lg">
         <h1 className="text-2xl font-bold">Mark Attendance</h1>
         <p className="opacity-90">Class ID: {numericClassId}</p>
       </div>
@@ -210,7 +217,10 @@ const PageAttendance: React.FC = () => {
           Save Attendance
         </button>
       </div>
+     </div>
     </div>
+  </div>
+</div>
   );
 };
 

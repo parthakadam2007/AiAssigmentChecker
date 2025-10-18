@@ -11,7 +11,7 @@ const DashboardAssigmentCheck: React.FC = () => {
     return (
         <div>
             <Header />
-            <div className="flex ">
+            <div className="flex h-[89vh]">
                 <PageList />
                 <AssignmentCheck student_id={student_id } submission_id={submission_id} />
             </div>

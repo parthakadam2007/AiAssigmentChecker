@@ -455,7 +455,6 @@ getTeacherCommonIssues = async (teacher_id) => {
 
 
 
-
 module.exports = {
   createTeacher,
   createAttendance,
@@ -473,5 +472,8 @@ module.exports = {
 
   getTeacherByEmail,
   getContext,
-  getAttendanceOfClassByClassId
+  getAttendanceOfClassByClassId,
+
+  // alert
+
 }

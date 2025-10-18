@@ -8,7 +8,7 @@ const DashboardStudentClassPage: React.FC = () => {
     return (
         <div>
             <Header />
-            <div className="flex">
+            <div className="flex h-[89vh]">
                 <PageList userType="student"/>
                 <PageClassStudent class_id={String(class_id)} />
             </div>

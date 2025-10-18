@@ -199,11 +199,11 @@ createAssignments_attachments = async (attachmentData) => {
 // -- api-1       | ]
 
 createGrade = async (evaluationData) => {
-  const { obtained_grade, student_id, feedback,corrections,suggestions,weaknesses,improvementAreas, submission_id } = evaluationData;
+  const { obtained_grade, student_id, feedback,corrections,suggestions,weaknesses,improvementAreas, submission_id ,aiTextDetection,plagiarism} = evaluationData;
   const query = `
     INSERT INTO grades (
-       obtained_grade, student_id, feedback,corrections,suggestions,weaknesses,improvementAreas, submission_id
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       obtained_grade, student_id, feedback,corrections,suggestions,weaknesses,improvementAreas, submission_id, aiTextDetection, plagiarism
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     RETURNING *
   `;
 
@@ -215,7 +215,9 @@ createGrade = async (evaluationData) => {
     suggestions,
     weaknesses,
     improvementAreas,
-    submission_id
+    submission_id,
+    aiTextDetection,
+    plagiarism
   ];
   console.log("values--",values)
 
@@ -497,6 +499,8 @@ getJsonAssignmentCheckInfo = async (student_id, submission_id) => {
       g.weaknesses,
       g.improvementAreas,
       g.submission_id,
+      g.aiTextDetection,
+      g.plagiarism,
       g.student_id AS grade_student_id,
 
       s.submission_date,
@@ -546,7 +550,8 @@ module.exports = {
   getSubmissionAndEvaluation,
   getJsonBuildObjectSubmission,
   getJsonBuildObjectStudentSubmission,
-  getJsonAssignmentCheckInfo
+  getJsonAssignmentCheckInfo,
+
 
 };
 

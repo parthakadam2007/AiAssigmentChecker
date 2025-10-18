@@ -8,7 +8,7 @@ const DashboardPage: React.FC = () => {
         <div>
             {/* <UseProtectedPage/> */}
             <Header/>
-            <div className='flex'>
+            <div className='flex h-[89vh]'>
             <PageList />
             <PagecontentSide/>
             </div>

@@ -7,12 +7,24 @@ const {
     handleGetSubmissionsByAssigment_idAndStudent_id,
     handleGetClassesWithAttendanceByStudentId,
     handleGetAttendanceByStudentAndClass,
-    // handleGetOverallAttendanceAnalytics,
+    handleGetActiveSessionByClassId,
     handleGetPerformanceAnalytics,
     handleGetGradesBySubmissionByStudent_idAndAssignment_id,
     handleGetSubmission_idByStudent_idAndAssignment_id,
-    handleGetStudentById // for just biometric attendance
+    handleGetStudentById,// for just biometric attendance
+    handleGetOverallAttendanceAnalytics,
+    handleGetRecentTestFeedback,
+    handleGetStudentAssignmentsWithStatus,
+    handleGetGradeBySubmissionId,
+    handleGetAssignmentDetailed,
+    handleGetLeaderboard,
+    handleGetPersonalRanking,
+    handleGetTaskCompletionData,
+    handleGetTaskCompletionStats,
+    handleMarkAttendanceByStudent,
 } = require("../controller/studentController")
+
+const authMiddleware = require('../middleware/authMiddleware');
 
 const {
     handleGetAssignmentsByClass_id,
@@ -67,6 +79,7 @@ const {handleSubmissionUpload}  = require("../controller/classController")
 const {handleJointClassByJoiningID} =require("../controller/studentController")
 router.post("/class/join",handleJointClassByJoiningID)
 router.post("/class/assignment/:assignment_id/submissions", uploadMiddleware.array('files', 10),handleSubmissionUpload)
-
+// Router is already mounted with student auth in server.js; no extra middleware here
+router.get('/class/:class_id/active-session', handleGetActiveSessionByClassId);
 
 module.exports = router;

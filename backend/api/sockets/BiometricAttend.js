@@ -1,34 +1,10 @@
-// module.exports = (io) => {
-//   io.on("connection", (socket) => {
-//     console.log("User connected:", socket.id);
-
-//     // Teacher starts session
-//     socket.on("startSession", ({ classId }) => {
-//       socket.join(classId); // group by class
-//       io.to(classId).emit("sessionStarted", { classId });
-//     });
-
-//     // Student marks attendance
-//     socket.on("markAttendance", ({ classId, studentId }) => {
-//       io.to(classId).emit("attendanceMarked", { studentId });
-//     });
-
-//     // Disconnect
-//     socket.on("disconnect", () => {
-//       console.log("User disconnected:", socket.id);
-//     });
-//   });
-// };
-
-
 const { createSession, markAttendanceForSession } = require("../models/studentModels"); 
-// or from classModels, wherever your DB functions are
-
+// importing from student models
 module.exports = (io) => {
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
-    // Teacher starts session
+    // Teacher will start session
     socket.on("startSession", async ({ classId }) => {
       try {
         // Use your existing DB function

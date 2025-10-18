@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const { createGrade } = require('../models/classModels');
-const {getContext} = require("../models/teacherModels")
+const { getContext } = require("../models/teacherModels")
 
 const { readFile } = require('node:fs/promises');
 const { getTextExtractor } = require('office-text-extractor');
@@ -37,11 +37,11 @@ const assignmentWorker = new Worker(
     const context = await getContext(data[0].assignment_id);
 
 
-    const  response = await ai.models.generateContent({
+    const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: assignmentText,
       config: {
-              systemInstruction: `You are an assignment checker. Your task is to review and provide feedback on student assignments.
+        systemInstruction: `You are an assignment checker. Your task is to review and provide feedback on student assignments.
               You have to grade the assignment on a scale of 0 to points mensioned and provide feedback.
               The output should be in the following JSON format:
               make this json short about one line each or more short(GIVE JSON IN ONE LINE DO NOT INCLUDE SPACE OR "n") and to the point.
@@ -63,53 +63,95 @@ const assignmentWorker = new Worker(
               `,
       },
     });
+        // AI check
+    const url = 'https://api.gowinston.ai/v2/ai-content-detection';
+    const options = {
+      method: 'POST',
+       headers: {
+      Authorization: 'Bearer voXN4aTtCnBX2KgCzUzAkDckofjJoPS6jqBVuzXp66fdc6c0',
+      'Content-Type': 'application/json'
+    },
+      body: `{"file":"${data[0].file_link}"}`
+    };
+    let aicheck = {};
+    try {
+      const response = await fetch(url, options);
+       aicheck = await response.json();
+      console.log(aicheck);
+    } catch (error) {
+      console.error(error);
+    }
 
-const regex = /\{[\s\S]*?\}/;
-const match = response.text.match(regex);
+    //Plagiarism check
+    const urlPlagiarism = 'https://api.gowinston.ai/v2/plagiarism';
+    const optionsPlagiarism = {
+      method: 'POST',
+       headers: {
+      Authorization: 'Bearer voXN4aTtCnBX2KgCzUzAkDckofjJoPS6jqBVuzXp66fdc6c0',
+      'Content-Type': 'application/json'
+    },
+      body: `{"file":"${data[0].file_link}"}`
+    };
+    let Plagiarismcheck = {};
+    try {
+      const response = await fetch(urlPlagiarism, optionsPlagiarism);
+      Plagiarismcheck = await response.json();
+      console.log('---->plagiarism',Plagiarismcheck);
+    } catch (error) {
+      console.error(error);
+    }
 
-if (match) {
-  // Use match[0] and clean it
-  let cleaned = match[0]
-  .replace(/```json/g, "")
-  .replace(/```/g, "")
-  .replace(/\n/g, " ")
-  .replace(/\s+/g, " ")
-  .replace(/,\s*}/g, "}")   // remove trailing commas before }
-  .replace(/,\s*]/g, "]")   // remove trailing commas before ]
-  .replace(/=\s*/g, ": ");  // fix = instead of :
+    // Extract JSON from response.text using regex
 
-  try {
-  const jsonResponse = JSON.parse(cleaned);
+    const regex = /\{[\s\S]*?\}/;
+    const match = response.text.match(regex);
 
-  const feedback = jsonResponse.feedback || "No feedback provided";
+    if (match) {
+      // Use match[0] and clean it
+      let cleaned = match[0]
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .replace(/\n/g, " ")
+        .replace(/\s+/g, " ")
+        .replace(/,\s*}/g, "}")   // remove trailing commas before }
+        .replace(/,\s*]/g, "]")   // remove trailing commas before ]
+        .replace(/=\s*/g, ": ");  // fix = instead of :
 
-  const rawGrade = jsonResponse.grade;
-  let grade = parseInt(rawGrade);
-  if (isNaN(grade)) grade = 0;
+      try {
+        const jsonResponse = JSON.parse(cleaned);
 
-  console.log(
-    `Feedback: ${feedback}, Grade: ${grade}, Submission ID: ${data[0].submission_id}`
-  );
+        const feedback = jsonResponse.feedback || "No feedback provided";
 
-  await createGrade({
-    obtained_grade: grade,
-    student_id: data[0].student_id,
-    feedback: jsonResponse.feedback || null,
-    corrections: jsonResponse.corrections || null,
-    suggestions: jsonResponse.suggestions || null,
-    weaknesses: jsonResponse.weaknesses || null,
-    improvementAreas: jsonResponse.improvementAreas || null,
-    submission_id: data[0].submission_id,
-  });
-} catch (err) {
-  console.error("JSON parse failed:", err, "\nCleaned text:", cleaned);
-}
+        const rawGrade = jsonResponse.grade;
+        let grade = parseInt(rawGrade);
+        if (isNaN(grade)) grade = 0;
 
-} else {
-  console.log("No JSON found in response!");
-}
+        console.log(
+          `Feedback: ${feedback}, Grade: ${grade}, Submission ID: ${data[0].submission_id}`
+        );
 
- 
+        await createGrade({
+          obtained_grade: grade,
+          student_id: data[0].student_id,
+          feedback: jsonResponse.feedback || null,
+          corrections: jsonResponse.corrections || null,
+          suggestions: jsonResponse.suggestions || null,
+          weaknesses: jsonResponse.weaknesses || null,
+          improvementAreas: jsonResponse.improvementAreas || null,
+          submission_id: data[0].submission_id,
+          aiTextDetection: aicheck || null,
+          plagiarism: Plagiarismcheck|| null
+        });
+      } catch (err) {
+        console.error("JSON parse failed:", err, "\nCleaned text:", cleaned);
+      }
+
+    } else {
+      console.log("No JSON found in response!");
+    }
+
+
+
 
 
   },

@@ -31,7 +31,7 @@ const PageClassTeacher: React.FC<{ class_id: string }> = ({ class_id }) => {
     };
 
     return (
-        <div className="w-[1500px]">
+        <div className="w-full bg-gray-50 rounded-3xl overflow-y-scroll">
             <Tab list={[{ item_name: "Section" }, { item_name: "Classwork" }, { item_name: "People" }, { item_name: "Grades" }, { item_name: "Attendance" }]} />
             {renderComponent()}
         </div>

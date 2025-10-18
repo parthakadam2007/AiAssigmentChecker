@@ -34,7 +34,10 @@ import BiometricAttendancePage from "./features/ClassTeacher/components/attendan
 // import DashboardStudentAnalysis from "./features/student/containers/DashboardStudentAnalysis";
 
 import DashboardTeacherAnalysis from "./features/ClassTeacher/container/DashboardTeacherAnalysis";
+
+// LandingPage Section //
 import LandingPage from "./shared/components/landing/LandingPage";
+import Contacts from "./shared/components/landing/contacts/Contacts";
 
 //new end
 function App() {
@@ -44,8 +47,10 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-
+            {/* ----------LANDING PAGE ROUTES-------------- */}
           <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/contacts" element={<Contacts />}></Route>
+
           {/* ----------AUTH ROUTES-------------- */}
           <Route path="/auth/signup" element={<SingupPage />}></Route>
           <Route path="/auth/signin" element={<SigninPage />}></Route>

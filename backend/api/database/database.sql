@@ -109,7 +109,9 @@ weaknesses TEXT DEFAULT NULL,
 improvementAreas TEXT DEFAULT NULL,
   submission_id INTEGER REFERENCES submissions(submission_id) ON DELETE CASCADE
 );  
-
+ALTER TABLE grades
+ADD COLUMN aiTextDetection TEXT DEFAULT NULL,
+ADD COLUMN plagiarism TEXT DEFAULT NULL;
 
 -- ================================
 -- Attendance table
@@ -141,6 +143,16 @@ CREATE TABLE attendance_sessions (
 );
 
 
+-- ================================
+-- Alert table
+-- ================================
+CREATE TABLE alerts (
+  alert_id SERIAL PRIMARY KEY,
+  message TEXT NOT NULL,
+  teacher_id INT REFERENCES teachers(teacher_id),
+  class_id INT REFERENCES classes(class_id),
+  sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ---
 
 CREATE OR REPLACE FUNCTION set_lecture_number()

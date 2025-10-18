@@ -1,3 +1,5 @@
+// const nodemailer = require('nodemailer');
+const { pool } = require('../models/database');
 
 ///////////////////////POST ROUTES////////////////////////////////////////////////
 const { createClass, getClassByTeacher_id } = require('../models/classModels');
@@ -299,6 +301,23 @@ handleGetTeacherCommonIssues = async (req, res) => {
     }
 }
 
+
+
+// POST api/alert/sent
+
+const sendAlert = async (req, res) => {
+  try {
+    const { message, class_id } = req.body;
+    const teacher_id = req.user.id; // From JWT
+
+    const alert = await createAlert(message, teacher_id, class_id);
+    res.status(201).json({ message: "Alert sent successfully", alert });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to send alert" });
+  }
+};
+
 module.exports = {
     handleCreateClass,
     handleCreateAttendance,
@@ -320,5 +339,8 @@ module.exports = {
     handleGetJsonBuildObjectStudentSubmission,
     handleGetStudentByStudent_id,
     handleGetJsonAssignmentCheckInfo,
-    handleGetAttendanceOfClassByClassId
+    handleGetAttendanceOfClassByClassId,
+
+    //alert
+    sendAlert
 }

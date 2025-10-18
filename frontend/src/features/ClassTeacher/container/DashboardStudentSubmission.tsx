@@ -9,9 +9,11 @@ const DashboardStudentSubmission: React.FC = () => {
     return (
         <div>
             <Header />
-            <div className="flex ">
+            <div className="flex h-[89vh]">
                 <PageList userType="student"/>
+                <div className="bg-gray-50 rounded-l-3xl overflow-y-scroll w-full">
                 <StudentSubmission class_id={class_id } student_id={student_id} />
+                </div>
             </div>
         </div>
     );
