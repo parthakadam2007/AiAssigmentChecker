@@ -31,7 +31,8 @@ CREATE TABLE students (
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
-  url_dp VARCHAR(255) DEFAULT 'public/img/user_photo'
+  url_dp VARCHAR(255) DEFAULT 'public/img/user_photo',
+  face_embedding TEXT NULL  -- New column for face embedding
 );
 
 -- ================================
@@ -174,3 +175,14 @@ FOR EACH ROW
 WHEN (NEW.lecture_number IS NULL)
 EXECUTE FUNCTION set_lecture_number();
 ---
+
+-- Face Data for Biometric Attendance
+CREATE TABLE face_data (
+  face_id SERIAL PRIMARY KEY,
+  student_id INTEGER REFERENCES students(student_id) ON DELETE CASCADE,
+  encoding BYTEA NOT NULL,        -- store the face embedding (128D vector as bytes)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+

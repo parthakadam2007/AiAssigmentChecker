@@ -19,6 +19,7 @@ const {
         calculateStudentBadges,
         getTaskCompletionData,
         getTaskCompletionStats,
+        getStudentById, //for just biometric attendance
         } = require("../models/studentModels");
 const {
         getAssignmentInfoByAssignment_id,
@@ -73,6 +74,29 @@ handleGetGradesBySubmissionByStudent_idAndAssignment_id = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+
+// controller to get student by student_id
+handleGetStudentById = async (req, res) => {
+    const student_id = req.params.student_id;
+
+    try {
+        if (!student_id) {
+            return res.status(400).json({ error: 'student_id missing' });
+        }
+
+        const studentData = await getStudentById(student_id);
+
+        if (!studentData) {
+            return res.status(404).json({ error: 'Student not found' });
+        }
+
+        res.json(studentData);
+    } catch (error) {
+        console.error("Error fetching student by ID:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 /// //////Analytics//////
 
@@ -427,4 +451,7 @@ module.exports = {
     handleGetStudentAssignmentsWithStatus,
     handleGetGradeBySubmissionId,
     handleGetAssignmentDetailed,
+
+    
+    handleGetStudentById, //for just biometric attendance
 }

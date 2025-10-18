@@ -2,14 +2,13 @@
 import getpass
 import os
 
-from app.models.database import SessionLocal
+from database import SessionLocal
 # from app.models.teacherModels import create_assignment
 from app.models.studentModels import get_grades_student_id
 
 from langchain.chat_models import init_chat_model
 
 llm = init_chat_model("google_genai:gemini-2.0-flash")
-
 
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import  MessagesState, START , END , StateGraph
