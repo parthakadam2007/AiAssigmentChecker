@@ -4,7 +4,7 @@ load_dotenv("../../../.env")
 import getpass
 import os
 
-from database import SessionLocal
+from app.models.database import SessionLocal
 from app.models.teacherModels import create_assignment,get_user_info,get_classes_by_teacher_id
 
 from langchain.chat_models import init_chat_model

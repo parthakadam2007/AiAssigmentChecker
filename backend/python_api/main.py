@@ -13,7 +13,7 @@ from routes.AttendanceRoute import attendance_router
 from routes.RegisterFaceRoute import enroll_router
 
 
-from database import SessionLocal
+from models.database import SessionLocal
 
 def get_db():
     db = SessionLocal()

@@ -2,7 +2,7 @@
 import getpass
 import os
 
-from database import SessionLocal
+from app.models.database import SessionLocal
 # from app.models.teacherModels import create_assignment
 from app.models.studentModels import get_grades_student_id
 

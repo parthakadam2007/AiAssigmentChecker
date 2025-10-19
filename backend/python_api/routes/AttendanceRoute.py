@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import numpy as np
 import cv2
 from datetime import date, datetime
-from database import SessionLocal
+from app.models.database import SessionLocal
 from app.models.FaceModels import FaceData
 from app.models.AttendanceModel import Attendance 
 from app.services.BiometricAttendance.MarkBioAttendance import extract_face_embedding, find_matching_face

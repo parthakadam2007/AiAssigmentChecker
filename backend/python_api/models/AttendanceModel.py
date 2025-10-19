@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey, UniqueConstraint
 from datetime import date, datetime
-from database import Base
+from app.models.database import Base
 from app.models.studentModels import Student
 from app.models.ClassModel import Class
 

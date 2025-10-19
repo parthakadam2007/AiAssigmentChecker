@@ -1,7 +1,7 @@
 # from sqlalchemy import Column, Integer, String
 # from database import Base
 from sqlalchemy import text
-from database import SessionLocal
+from app.models.database import SessionLocal
 
 
 def create_assignment(class_id: str, title: str) -> None:

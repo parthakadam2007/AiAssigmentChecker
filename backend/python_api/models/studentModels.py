@@ -1,7 +1,6 @@
 from sqlalchemy import text
 from sqlalchemy import Column, Integer, String, Text
-from database import Base  
-from database import SessionLocal
+from app.models.database import SessionLocal,Base
 
 def get_grades_student_id(student_id:str):
     # db = SessionLocal()

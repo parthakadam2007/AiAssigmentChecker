@@ -58,14 +58,14 @@ const PageAttendanceDetail: React.FC = () => {
     url: `${import.meta.env.VITE_BACKEND_URL_BASE}/python_api/biometric_attendance/check-attendance?class_id=${class_id}&session_id=${sessionActive.session_id}`,
   });
 
-  // --- Sync session data from API
+  //Sync session data from API
   useEffect(() => {
     if (initialSessionData) {
       setSessionActive(initialSessionData);
     }
   }, [initialSessionData]);
 
-  // --- Listen to socket events for live session updates
+  // Listen to socket events for live session updates
   useEffect(() => {
     socket.on("sessionStatus", (data: { active: boolean; session_id?: string }) => {
       setSessionActive(data);
@@ -83,7 +83,7 @@ const PageAttendanceDetail: React.FC = () => {
     };
   }, [class_id]);
 
-  // --- Handle webcam capture and upload
+  // Handle webcam capture and upload
   const handleCapture = useCallback(async () => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (!imageSrc) return;
@@ -117,18 +117,15 @@ const PageAttendanceDetail: React.FC = () => {
 
     if (data?.success) {
       console.log("✅ Attendance marked successfully!");
-      setAttendanceMarked(true); // prevent multiple marking
-      // Update attendance locally
+      setAttendanceMarked(true); // prevent multiple marking at same session time
       attendance?.push({ date: new Date().toISOString(), status: "Present" });
-      // Optionally force refresh state (if attendance is from useFetch, you may need to refetch)
       window.location.reload();
     } else {
       console.log((data.message || "Unknown error"));
     }
   }, [sessionActive]);
 
-
-  // --- Open webcam when "Mark Attendance" is clicked
+  // Open webcam when "Mark Attendance" is clicked
   const markAttendance = async () => {
     if (!sessionActive?.active || !sessionActive.session_id) {
       console.log("No active session found.");

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import numpy as np
 import cv2
 
-from database import SessionLocal
+from app.models.database import SessionLocal
 from app.models.FaceModels import FaceData
 from app.schemas.Faceschemas import FaceDataModel
 from app.services.BiometricAttendance.RegisterFace import encode_face, extract_face_embedding
