@@ -1,12 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
 import Webcam from "react-webcam";
-// import useFetch from "../../../shared/hooks/UseFetch";
-// import useManualFetch from "../../../shared/hooks/useManualFetch";
-
-interface ApiResponse {
-    success: boolean;
-    message?: string;
-}
 
 interface FaceRegisterProps {
     studentId: number;
@@ -21,7 +14,6 @@ interface FaceRegisterProps {
 const FaceRegister: React.FC<FaceRegisterProps> = ({ studentId, onClose }) => {
     const webcamRef = useRef<Webcam>(null);
     const [loading, setLoading] = useState(false);
-    // const { execute } = useManualFetch<ApiResponse>();
 
     const uploadFaceImage = async (base64Image: string) => {
         if (!studentId) {
@@ -101,5 +93,6 @@ const FaceRegister: React.FC<FaceRegisterProps> = ({ studentId, onClose }) => {
         </div>
     );
 };
+
 
 export default FaceRegister;
