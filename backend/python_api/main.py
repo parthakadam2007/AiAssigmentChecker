@@ -1,5 +1,5 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI,APIRouter
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
@@ -9,8 +9,11 @@ from services.teacherChatbot.TeacherChatBot import TeacherChatBot
 from services.studentChatbot.studentChatbot import StudentChatBot
 from middleware.auth import auth_middleware
 
+from routes.AttendanceRoute import attendance_router
+from routes.RegisterFaceRoute import enroll_router
 
-from app.models.database import SessionLocal
+
+from models.database import SessionLocal
 
 def get_db():
     db = SessionLocal()
@@ -20,6 +23,7 @@ def get_db():
         db.close()
 
 app = FastAPI()
+# # attendance routes
 
 origins = [
     "http://localhost:3000", 
@@ -74,6 +78,9 @@ from fastapi.security import OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
+
+app.include_router(attendance_router)
+app.include_router(enroll_router)
 
 @app.post("/teacherChatBottest",)
 async def teacherChatBotHelpertest(request: Request,user=Depends(auth_middleware("teacher"))):

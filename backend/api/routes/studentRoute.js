@@ -11,6 +11,7 @@ const {
     handleGetPerformanceAnalytics,
     handleGetGradesBySubmissionByStudent_idAndAssignment_id,
     handleGetSubmission_idByStudent_idAndAssignment_id,
+    handleGetStudentById,// for just biometric attendance
     handleGetOverallAttendanceAnalytics,
     handleGetRecentTestFeedback,
     handleGetStudentAssignmentsWithStatus,
@@ -66,6 +67,9 @@ router.get("/leaderboard", handleGetLeaderboard);
 router.get("/leaderboard/personal", handleGetPersonalRanking);
 router.get("/analytics/task-completion", handleGetTaskCompletionData);
 router.get("/analytics/task-stats", handleGetTaskCompletionStats);
+
+// GET student by student_id (for just biometric attendance)
+router.get("/student_data/:student_id", handleGetStudentById);
 
 
 //////////////////POST ROUTES/////////////////////////

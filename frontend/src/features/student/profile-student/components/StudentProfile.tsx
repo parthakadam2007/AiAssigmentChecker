@@ -1,10 +1,19 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom";
 import { FaEdit, FaCamera } from "react-icons/fa"
+import FaceRegister from "../../containers/FaceRegister";
+// import useFetch from "../../../../shared/hooks/UseFetch";
+
+
+// interface FaceRegisterProps {
+//     studentId: number;
+// }
 
 export default function StudentProfilePage() {
+  const [showFaceRegister, setShowFaceRegister] = useState(false);
   const [isEditing, setIsEditing] = useState(false)
   const [profileData, setProfileData] = useState({
+    id: "73",
     fullName: "John Doe",
     rollNumber: "CS2024001",
     email: "john.doe@university.edu",
@@ -13,6 +22,8 @@ export default function StudentProfilePage() {
     department: "Computer Science",
     address: "123 University Street, Campus City, State 12345",
     profilePhoto: "https://randomuser.me/api/portraits/men/46.jpg",
+    face_embedding: [
+    ]
   })
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -44,6 +55,20 @@ export default function StudentProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
+  // const [, setStudentId] = useState<number | null>(null);
+
+  // const { data: studentData } = useFetch<{ student_id: number }>({
+  //   method: "GET",
+  //   url: `${import.meta.env.VITE_BACKEND_URL}/student/student_data/${profileData.id}`,
+  // });
+
+  // useEffect(() => {
+  //   if (studentData?.student_id) {
+  //     setStudentId(studentData.student_id);
+  //   }
+  // }, [studentData]);
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-8 relative w-full rounded-4xl items-end justify-center ">
@@ -236,9 +261,23 @@ export default function StudentProfilePage() {
         <section className="bg-white rounded-3xl p-6 shadow-3xl ">
           <h3 className="text-2xl font-semibold mb-4">System Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+            {/* To Upload and check face data */}
             <div>
               <p className="font-semibold">Face Recognition Status</p>
-              <p className="text-green-600 font-semibold">✓ Enrolled</p>
+              {profileData.face_embedding ? (
+                <p className="text-green-600 font-semibold">✓ Enrolled</p>
+              ) : (
+                <button
+                  onClick={() => setShowFaceRegister(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Register Face
+                </button>
+              )}
+
+              {showFaceRegister && (
+                <FaceRegister studentId={73} onClose={() => setShowFaceRegister(false)} />
+              )}
             </div>
             <div>
               <p className="font-semibold">Last Profile Update</p>
@@ -253,4 +292,4 @@ export default function StudentProfilePage() {
       </div>
     </div>
   )
-}
+} 

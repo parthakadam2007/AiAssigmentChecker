@@ -1,22 +1,28 @@
 import { useState, useEffect, useRef } from "react"
 import { io } from "socket.io-client"
+import { useParams } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import useManualFetch from "../../../../shared/hooks/useManualFetch";
-// import useFetch from "../../../../shared/hooks/UseFetchseFetch"; 
+import useFetch from "../../../../shared/hooks/UseFetch";
 // import AnimatedLoader from "../../../../shared/components/loaders/DefaultLoader";
 
 type SessionStatus = "idle" | "active" | "paused" | "ended"
-
-
 interface ApiResponse {
   success: boolean;
   message?: string;
 }
 
+interface Class {
+  class_name: string;
+}
+
+interface AttendancePayload {
+  class_id: number
+}
+
 const TeacherAttendancePage: React.FC = () => {
   const [sessionStatus, setSessionStatus] = useState<SessionStatus>("idle")
   const [sessionData, setSessionData] = useState({
-    course: "Advanced Web Development",
     session: "Morning Session - 09:00 AM",
     date: new Date().toLocaleDateString("en-US", {
       weekday: "long",
@@ -28,6 +34,14 @@ const TeacherAttendancePage: React.FC = () => {
     studentsPresent: 0,
     totalStudents: 25,
   })
+  const { class_id} = useParams<{ class_id: string}>();
+  const numericClassId = class_id ? parseInt(class_id, 10) : 0;
+  const { data } = useFetch({
+    method: "GET",
+    url: `${import.meta.env.VITE_BACKEND_URL}/teacher/class/${numericClassId}`,
+  });
+
+  const classData: Class = data as Class || { class_name: "Loading..." };
 
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   useEffect(() => {
@@ -51,7 +65,9 @@ const TeacherAttendancePage: React.FC = () => {
   const { execute, status: saveStatus, error: saveError } = useManualFetch<ApiResponse>();
 
   const startSession = async () => {
-    const payload = { class_id: "40", teacher_id: "1" }; // replace with dynamic values
+    const payload: AttendancePayload = {
+      class_id: numericClassId
+    }; // replace with dynamic values
     const data = await execute(
       `${import.meta.env.VITE_BACKEND_URL}/teacher/biometric_attendance/start_session`,
       "POST",
@@ -64,21 +80,24 @@ const TeacherAttendancePage: React.FC = () => {
         ...prev,
         startTime: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
       }));
-      socketRef.current?.emit("startSession", { classId: "40" });
+      socketRef.current?.emit("startSession", payload);
     } else {
       console.error("Failed to start session:", data?.message || "Unknown error");
     }
   };
 
   const endSession = async () => {
+    const payload: AttendancePayload = {
+      class_id: numericClassId
+    }; // replace with dynamic values
     const data = await execute(
       `${import.meta.env.VITE_BACKEND_URL}/teacher/biometric_attendance/end_session`,
       "POST",
-      { class_id: "40" }
+      payload
     );
     if (data?.success) {
       setSessionStatus("ended");
-      socketRef.current?.emit("endSession", { classId: "40" });
+      socketRef.current?.emit("endSession", payload);
     } else {
       console.error("Failed to end session:", data?.message || "Unknown error");
     }
@@ -104,8 +123,8 @@ const TeacherAttendancePage: React.FC = () => {
         <h3 className="text-lg font-medium mb-4 text-gray-700">Session Details</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-500">Course</p>
-            <p className="font-medium text-gray-800">{sessionData.course}</p>
+            <p className="text-sm text-gray-500">Class Name</p>
+            <p className="font-medium text-gray-800">{classData.class_name}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Session</p>

@@ -1,4 +1,4 @@
-const {Router} = require('express')
+const { Router } = require('express')
 const router = Router()
 
 
@@ -14,6 +14,7 @@ const {
     handleCreateAttendance,
     handlestartSession,
     handleEndSession,
+    handleGetClassById,
     handleGetAttendanceOfClassByClassId,
     // analytics
     handleGetTeacherClassroomOverview,
@@ -21,26 +22,28 @@ const {
     handleGetTeacherClassFeedbackSummary,
     handleGetClassDetailedFeedback,
     handleGetTeacherCommonIssues,
-} = require('../controller/teacherController');
+} = require('../controller/teacherController')
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 router.post('/classes', handleCreateClass);
-router.post('/attendance',handleCreateAttendance);
+router.post('/attendance', handleCreateAttendance);
 
 // biometric attendance
 router.post("/biometric_attendance/start_session", handlestartSession);
 router.post("/biometric_attendance/end_session", handleEndSession);
 
+
 // alert
 ///////////////////GET ROUTS////////////////////////
 router.get('/classes', handleGetClassByTeacher_id)
-router.get('/class/students/:class_id',handleGetStudentsByClass_id)
+router.get('/class/students/:class_id', handleGetStudentsByClass_id)
+router.get('/class/:class_id', handleGetClassById)
 router.get('/class/submissions/:class_id', handleGetJsonBuildObjectSubmission)
 router.get('/class/submissions/:class_id/student/:student_id', handleGetJsonBuildObjectStudentSubmission)
 router.get('/student/:student_id', handleGetStudentByStudent_id)
 router.get('/submission/:submission_id/student/:student_id', handleGetJsonAssignmentCheckInfo)
 //Attendance route
-router.get('/attendance/class/:class_id',handleGetAttendanceOfClassByClassId)
+router.get('/attendance/class/:class_id', handleGetAttendanceOfClassByClassId)
 
 
 // ================ TEACHER ANALYTICS ROUTES ================
