@@ -39,16 +39,35 @@ createTeacher = async (teacherData) => {
 
 // }
 
-createAttendance = async (class_id, student_id, status,  unique_id, method = "manual") => {
-const query = `
-  INSERT INTO attendance (class_id, student_id, status, method, unique_id)
-  VALUES ($1, $2, $3, $4, $5)
-  ON CONFLICT (class_id, student_id, date, lecture_number, session_id)
-  DO UPDATE SET status = EXCLUDED.status, method = EXCLUDED.method
-`;
+// createAttendance = async (class_id, student_id, status,  unique_id, method = "manual") => {
+// const query = `
+//   INSERT INTO attendance (class_id, student_id, status, method, unique_id)
+//   VALUES ($1, $2, $3, $4, $5)
+//   ON CONFLICT (class_id, student_id, date, lecture_number, session_id)
+//   DO UPDATE SET status = EXCLUDED.status, method = EXCLUDED.method
+// `;
 
-const values = [class_id, student_id, status, method, unique_id];
-console.log("Attendance Query Values:", values);
+// const values = [class_id, student_id, status, method, unique_id];
+// console.log("Attendance Query Values:", values);
+//   try {
+//     await pool.query(query, values);
+//   } catch (error) {
+//     console.error('Error creating student Attendance:', error);
+//     throw error;
+//   }
+// };
+
+createAttendance = async (class_id, student_id, status, unique_id, lecture_number, session_id = null, method = "manual") => {
+  const query = `
+    INSERT INTO attendance (class_id, student_id, status, method, unique_id, lecture_number, session_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    ON CONFLICT (class_id, student_id, date, lecture_number)
+    DO UPDATE SET status = EXCLUDED.status, method = EXCLUDED.method
+  `;
+
+  const values = [class_id, student_id, status, method, unique_id, lecture_number, session_id];
+  console.log("Attendance Query Values:", values);
+
   try {
     await pool.query(query, values);
   } catch (error) {
@@ -58,7 +77,9 @@ console.log("Attendance Query Values:", values);
 };
 
 
-// Biometric Attendance session creation
+/////////////////////////////////////////////////
+///// Biometric Attendance session creation//////
+/////////////////////////////////////////////////
 const startAttendanceSession = async (class_id, teacher_id) => {
   try {
     // Deactivate any previous active sessions for this class
@@ -92,6 +113,14 @@ const endAttendanceSession = async (class_id) => {
   const result = await pool.query(query, [class_id]);
   return result.rows[0];
 };
+
+
+// ==========Model for Getting class detail by class Id==========
+async function getClassById(class_id) {
+  const query = `SELECT class_id, class_name FROM classes WHERE class_id = $1`;
+  const result = await pool.query(query, [class_id]);
+  return result.rows[0]; // return the first (and only) matching row
+}
 
 
 //////////////////GET MODELS/////////////////
@@ -191,8 +220,8 @@ ORDER BY date;
 
 // Get classroom overview statistics for teacher
 getTeacherClassroomOverview = async (teacher_id) => {
-    try {
-        const query = `
+  try {
+    const query = `
             WITH class_stats AS (
                 SELECT 
                     c.class_id,
@@ -233,25 +262,25 @@ getTeacherClassroomOverview = async (teacher_id) => {
             FROM class_stats
         `;
 
-        const { rows } = await pool.query(query, [teacher_id]);
-        return rows[0] || {
-            total_classes: 0,
-            total_students: 0,
-            avg_class_performance: 0,
-            pending_assignments_rate: 0,
-            attendance_rate: 0,
-            overall_avg_grade: 0
-        };
-    } catch (error) {
-        console.error('Error in getTeacherClassroomOverview:', error);
-        throw error;
-    }
+    const { rows } = await pool.query(query, [teacher_id]);
+    return rows[0] || {
+      total_classes: 0,
+      total_students: 0,
+      avg_class_performance: 0,
+      pending_assignments_rate: 0,
+      attendance_rate: 0,
+      overall_avg_grade: 0
+    };
+  } catch (error) {
+    console.error('Error in getTeacherClassroomOverview:', error);
+    throw error;
+  }
 }
 
 // Get detailed class statistics for teacher
 getTeacherClassStatistics = async (teacher_id) => {
-    try {
-        const query = `
+  try {
+    const query = `
             SELECT 
                 c.class_id,
                 c.class_name,
@@ -283,20 +312,20 @@ getTeacherClassStatistics = async (teacher_id) => {
             ORDER BY c.class_name
         `;
 
-        const { rows } = await pool.query(query, [teacher_id]);
-        return rows;
-    } catch (error) {
-        console.error('Error in getTeacherClassStatistics:', error);
-        throw error;
-    }
+    const { rows } = await pool.query(query, [teacher_id]);
+    return rows;
+  } catch (error) {
+    console.error('Error in getTeacherClassStatistics:', error);
+    throw error;
+  }
 }
 
 // ================ TEACHER FEEDBACK MODELS ================
 
 // Get class feedback summary for teacher
 getTeacherClassFeedbackSummary = async (teacher_id) => {
-    try {
-        const query = `
+  try {
+    const query = `
             SELECT 
                 c.class_id, 
                 c.class_name,
@@ -329,18 +358,18 @@ getTeacherClassFeedbackSummary = async (teacher_id) => {
             ORDER BY c.class_name
         `;
 
-        const { rows } = await pool.query(query, [teacher_id]);
-        return rows;
-    } catch (error) {
-        console.error('Error in getTeacherClassFeedbackSummary:', error);
-        throw error;
-    }
+    const { rows } = await pool.query(query, [teacher_id]);
+    return rows;
+  } catch (error) {
+    console.error('Error in getTeacherClassFeedbackSummary:', error);
+    throw error;
+  }
 }
 
 // Get detailed feedback for a specific class
 getClassDetailedFeedback = async (class_id) => {
-    try {
-        const query = `
+  try {
+    const query = `
             SELECT 
                 g.grade_id,
                 g.obtained_grade,
@@ -365,18 +394,18 @@ getClassDetailedFeedback = async (class_id) => {
             ORDER BY sub.submission_date DESC, stu.first_name
         `;
 
-        const { rows } = await pool.query(query, [class_id]);
-        return rows;
-    } catch (error) {
-        console.error('Error in getClassDetailedFeedback:', error);
-        throw error;
-    }
+    const { rows } = await pool.query(query, [class_id]);
+    return rows;
+  } catch (error) {
+    console.error('Error in getClassDetailedFeedback:', error);
+    throw error;
+  }
 }
 
 // Get common issues across all classes for teacher
 getTeacherCommonIssues = async (teacher_id) => {
-    try {
-        const query = `
+  try {
+    const query = `
             WITH feedback_analysis AS (
                 SELECT 
                     c.class_name,
@@ -416,12 +445,12 @@ getTeacherCommonIssues = async (teacher_id) => {
             ORDER BY total_feedbacks DESC
         `;
 
-        const { rows } = await pool.query(query, [teacher_id]);
-        return rows;
-    } catch (error) {
-        console.error('Error in getTeacherCommonIssues:', error);
-        throw error;
-    }
+    const { rows } = await pool.query(query, [teacher_id]);
+    return rows;
+  } catch (error) {
+    console.error('Error in getTeacherCommonIssues:', error);
+    throw error;
+  }
 }
 
 
@@ -429,6 +458,7 @@ getTeacherCommonIssues = async (teacher_id) => {
 module.exports = {
   createTeacher,
   createAttendance,
+  getClassById,
   // biometric
   startAttendanceSession,
   endAttendanceSession,
