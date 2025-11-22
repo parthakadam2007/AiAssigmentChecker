@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@azure/identity": "^4.11.1",
+    "@azure/identity": "^4.13.0",
     "@azure/storage-blob": "^12.28.0",
     "@google/genai": "^1.10.0",
     "@supabase/supabase-js": "^2.57.4",
