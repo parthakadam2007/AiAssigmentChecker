@@ -17,7 +17,7 @@
     "@google/genai": "^1.10.0",
     "@supabase/supabase-js": "^2.57.4",
     "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.0",
+    "body-parser": "^2.2.1",
     "bullmq": "^5.56.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
