@@ -13,7 +13,7 @@
   "description": "",
   "dependencies": {
     "@azure/identity": "^4.11.1",
-    "@azure/storage-blob": "^12.28.0",
+    "@azure/storage-blob": "^12.29.1",
     "@google/genai": "^1.10.0",
     "@supabase/supabase-js": "^2.57.4",
     "bcrypt": "^6.0.0",
